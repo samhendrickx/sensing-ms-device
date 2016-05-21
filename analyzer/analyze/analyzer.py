@@ -1,6 +1,6 @@
 from csvreader import CSVReader
 from collections import defaultdict
-
+import datetime as dt
 
 class Analyzer(object):
 
@@ -12,7 +12,10 @@ class Analyzer(object):
     def analyze(self):
         self.csvReader.read()
         analyzed = defaultdict()
+
         for data in self.csvReader.getData():
             analyzed[data.name] = data.getAnalyzed()
+        i = dt.datetime.now()
+        analyzed["datetime"] = i.isoformat()
         self.csvReader.clear()
         return analyzed
