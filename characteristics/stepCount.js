@@ -18,7 +18,7 @@ function stepCount(characteristic) {
   characteristic.on('read', function(data, isNotification) {
     if (isNotification) {
       var csvData = new Date().getTime() + ',' + data.readUInt8(0) + '\n';
-      require('fs').appendFile('data/steps.csv', csvData);
+      require('fs').appendFile('data/raw/steps.csv', csvData);
     }
   });
   characteristic.notify(true, function(error) {

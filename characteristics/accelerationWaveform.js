@@ -16,7 +16,7 @@ function accelerationWaveform(characteristic) {
       var wave = data[0] + (data[1] << 8) + (data[2] << 16);
 
       var csvData = new Date().getTime() + ',' + wave + '\n';
-      require('fs').appendFile('data/accelerometer.csv', csvData);
+      require('fs').appendFile('data/raw/accelerometer.csv', csvData);
     }
   });
 

@@ -25,7 +25,7 @@ function temperatureMeasurement(characteristic) {
     console.log('Temperature: ' + temp + '°C');
 
     var csvData = new Date().getTime() + ',' + temp + '\n';
-    require('fs').appendFile('data/temperature.csv', csvData);
+    require('fs').appendFile('data/raw/temperature.csv', csvData);
 
 
   });
