@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Angel Sensor Node.js
 A Node.js library for Angel Sensor (M1).
 
@@ -46,3 +47,7 @@ node index.js
 * Implement [Activity Monitoring Service](http://angelsensor.com/protocols/seraphim-sense/activity-monitoring-service/)
 * Implement [Alarm Clock Service](http://angelsensor.com/protocols/seraphim-sense/alarm-clock-service/)
 * Implement [Health Journal Service](http://angelsensor.com/protocols/seraphim-sense/health-journal-service/)
+=======
+# ssensing-ms-device
+Repository for the Angel Sensor device for team Sensing MS
+>>>>>>> 6b7239238b37ea9bf8281fa1d4e89463b0b8e856
