@@ -19,6 +19,5 @@ class HeartrateData(Data):
 
     def extractData(self):
         if len(self.data["heartrate"]) == 0:
-            print "No heart rate available. Generate random."
             return [randint(60, 70) for i in range(0, 10)]
         return [el[0] for el in self.data["heartrate"]]
