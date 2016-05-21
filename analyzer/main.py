@@ -2,6 +2,7 @@ from os import listdir, stat
 from time import sleep
 from analyze.csvreader import CSVReader
 from analyze.analyzer import Analyzer
+from collections import defaultdict
 
 
 def filesAvailable(directory):
@@ -19,14 +20,11 @@ def filesAvailable(directory):
 
 if __name__ == "__main__":
     directory = "../device/data/analyze/"
-    csvReader = CSVReader(directory)
-    analyzer = Analyzer()
+    analyzer = Analyzer(directory)
     while True:
         if filesAvailable(directory):
-            sleep(2)
-            csvReader.read()
-            analyzer.parseSensorData(csvReader.sensorData)
-            csvReader.clear()
+            #sleep(2)
+            analyzedDict = analyzer.analyze()
         sleep(2)
 
 
