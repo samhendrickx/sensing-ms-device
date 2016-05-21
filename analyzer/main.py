@@ -27,7 +27,6 @@ def postData(analyzedDict):
 
     response = urllib2.urlopen(req, json.dumps(analyzedDict))
     html = response.read()
-
     print html
 
 
