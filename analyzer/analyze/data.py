@@ -1,7 +1,7 @@
 
 class Data(object):
 
-    data = None
+    data = []
 
     def __init__(self, data):
         self.data = data

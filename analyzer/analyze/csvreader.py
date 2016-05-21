@@ -24,21 +24,20 @@ class CSVReader(object):
             path = str(self.directory) + str(fileName)
             with open(path, "rb") as csvFile:
                 reader = csv.reader(csvFile, delimiter=",")
-                dataList = [row for row in reader if row != []]
+                dataList = [map(lambda x: eval(x), row) for row in reader if row != []]
                 self.sensorData[sensor] = dataList
 
     def clear(self):
-        '''self.sensorData = None
+        self.sensorData = None
         fileNames = listdir(self.directory)
         for fileName in fileNames:
             path = str(self.directory) + str(fileName)
-            remove(path)'''
-        pass
+            remove(path)
 
     def getData(self):
-        heartrateData = HeartrateData(self.sensorData["heartrate"])
-        activityData = ActivityData({key: self.sensorData[key] for key in ["accelerometer", "steps"]})
-        temperatureData = TemperatureData(self.sensorData["temperature"])
-        stepsData = StepsData(self.sensorData["steps"])
-        stressData = StressData({key: self.sensorData[key] for key in ["heartrate", "temperature"]})
+        heartrateData = HeartrateData(self.sensorData)
+        activityData = ActivityData(self.sensorData)
+        temperatureData = TemperatureData(self.sensorData)
+        stepsData = StepsData(self.sensorData)
+        stressData = StressData(self.sensorData)
         return [heartrateData, activityData, temperatureData, stepsData, stressData]

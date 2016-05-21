@@ -7,10 +7,14 @@ class HeartrateData(Data):
     name = "heartrate"
 
     def getAnalyzed(self):
-        if len(self.data) > 0:
+        data = self.extractData()
+        if len(data) > 0:
             return {
-                "avg": mean(self.data),
-                "max": max(self.data),
-                "min": min(self.data),
-                "std": std(self.data)
+                "avg": mean(data),
+                "max": max(data),
+                "min": min(data),
+                "std": std(data)
             }
+
+    def extractData(self):
+        return [el[0] for el in self.data["heartrate"]]
