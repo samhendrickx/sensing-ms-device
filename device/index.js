@@ -8,6 +8,7 @@ var waveformSignalService = require('./services/waveformSignal.js');
 var bloodOxygenSaturationService = require('./services/bloodOxygenSaturation.js');
 var activityMonitoringService = require('./services/activityMonitoring.js');
 
+var fs = require('fs');
 
 
 noble.on('stateChange', function(state) {
@@ -72,7 +73,25 @@ noble.on('discover', function(peripheral) {
       console.log('peripheral disconnected: ' + peripheral.advertisement.localName);
 
     });
-
   }
-
 });
+
+// Copy raw data to analyze every 30 minutes
+var intervalTime = 1000 * 60 * 1;
+setInterval(function() { 
+  // Copy all files
+  fs.createReadStream('data/raw/accelerometer.csv').pipe(fs.createWriteStream('data/analyze/accelerometer.csv')); 
+  fs.createReadStream('data/raw/falls.csv').pipe(fs.createWriteStream('data/analyze/falls.csv')); 
+  fs.createReadStream('data/raw/gyroscope.csv').pipe(fs.createWriteStream('data/analyze/gyroscope.csv')); 
+  fs.createReadStream('data/raw/heartrate.csv').pipe(fs.createWriteStream('data/analyze/heartrate.csv')); 
+  fs.createReadStream('data/raw/steps.csv').pipe(fs.createWriteStream('data/analyze/steps.csv')); 
+  fs.createReadStream('data/raw/temperature.csv').pipe(fs.createWriteStream('data/analyze/temperature.csv')); 
+
+  fs.truncate('data/raw/accelerometer.csv', 0, function(){console.log('Cleared')})
+  fs.truncate('data/raw/falls.csv', 0, function(){console.log('Cleared')})
+  fs.truncate('data/raw/gyroscope.csv', 0, function(){console.log('Cleared')})
+  fs.truncate('data/raw/heartrate.csv', 0, function(){console.log('Cleared')})
+  fs.truncate('data/raw/steps.csv', 0, function(){console.log('Cleared')})
+  fs.truncate('data/raw/temperature.csv', 0, function(){console.log('Cleared')})
+}, intervalTime);
+

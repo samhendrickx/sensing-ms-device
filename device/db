@@ -1,0 +1,20 @@
+#! /bin/sh
+
+case "$1" in
+    clear)
+    echo "" > data/raw/accelerometer.csv
+    echo "" > data/raw/gyroscope.csv
+    echo "" > data/raw/steps.csv
+    echo "" > data/raw/heartrate.csv
+    echo "" > data/raw/falls.csv
+    echo "" > data/raw/temperature.csv
+
+    exit 1
+    ;;
+  *)
+    echo "Usage: whatip {public|private}"
+    exit 1
+    ;;
+esac
+
+exit 0
