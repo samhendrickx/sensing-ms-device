@@ -24,7 +24,7 @@ function temperatureMeasurement(characteristic) {
   	var temp = mantissa * Math.pow(10, exp);
     console.log('Temperature: ' + temp + '°C');
 
-    var csvData = new Date().getTime() + ',' + temp + '\n';
+    var csvData = temp + '\n';
     require('fs').appendFile('data/raw/temperature.csv', csvData);
 
 

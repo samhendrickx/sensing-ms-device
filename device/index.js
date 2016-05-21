@@ -69,15 +69,21 @@ noble.on('discover', function(peripheral) {
     });
 
     peripheral.once('disconnect', function() {
-
       console.log('peripheral disconnected: ' + peripheral.advertisement.localName);
-
     });
   }
 });
 
+// Clear before start
+fs.truncate('data/raw/accelerometer.csv', 0, function(){ console.log('Cleared') })
+fs.truncate('data/raw/falls.csv', 0, function(){ console.log('Cleared') })
+fs.truncate('data/raw/gyroscope.csv', 0, function(){ console.log('Cleared') })
+fs.truncate('data/raw/heartrate.csv', 0, function(){ console.log('Cleared') })
+fs.truncate('data/raw/steps.csv', 0, function(){ console.log('Cleared') })
+fs.truncate('data/raw/temperature.csv', 0, function(){ console.log('Cleared') })
+
 // Copy raw data to analyze every 30 minutes
-var intervalTime = 1000 * 60 * 0.3;
+var intervalTime = 1000 * 60 * 1;
 setInterval(function() { 
   // Copy all files
   fs.createReadStream('data/raw/accelerometer.csv').pipe(fs.createWriteStream('data/analyze/accelerometer.csv')); 

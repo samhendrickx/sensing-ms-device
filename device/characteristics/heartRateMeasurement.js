@@ -11,7 +11,7 @@ function heartRateMeasurement(characteristic) {
   characteristic.on('read', function(data, isNotification) {
     console.log('Heart Rate Measurement: ' + data.readUInt16LE(1) + 'bpm');
 
-    var csvData = new Date().getTime() + ',' + data.readUInt16LE(1) + '\n';
+    var csvData = data.readUInt16LE(1) + '\n';
     require('fs').appendFile('data/raw/heartrate.csv', csvData);
 
   });

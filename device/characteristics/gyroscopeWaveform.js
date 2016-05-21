@@ -51,7 +51,7 @@ function accelerationWaveform(characteristic) {
 
       data = data.slice(6);
 
-      var csvData = new Date().getTime() + ',' + angleX + ',' + angleY + ',' + angleZ + '\n';
+      var csvData = angleX + ',' + angleY + ',' + angleZ + '\n';
       require('fs').appendFile('data/raw/gyroscope.csv', csvData);
     }
 
