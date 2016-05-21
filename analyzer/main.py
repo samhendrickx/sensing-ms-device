@@ -27,7 +27,16 @@ def postData(analyzedDict):
 
     response = urllib2.urlopen(req, json.dumps(analyzedDict))
     html = response.read()
-    print html
+    html = json.loads(html)
+    print "Success!\n"
+    print "Result:"
+    for key, value in html.iteritems():
+        if isinstance(value, dict):
+            print str(key)+":"
+            for key2, value2 in value.iteritems():
+                print "     "+str(key2)+": "+str(value2)
+        else:
+            print str(key)+": "+str(value)
 
 
 if __name__ == "__main__":
@@ -35,15 +44,12 @@ if __name__ == "__main__":
     analyzer = Analyzer(directory)
     while True:
         if filesAvailable(directory):
-            print "New files are available.\nWaiting for all data..."
+            print "\nNew files are available.\nWaiting for all data..."
             sleep(2)
             print "Data received.\nStart analyzing..."
             analyzedDict = analyzer.analyze()
             print "Data analyzed.\nStart posting..."
             postData(analyzedDict)
-            print "Data posted."
-        else:
-            print "No new files available."
         sleep(5)
 
 

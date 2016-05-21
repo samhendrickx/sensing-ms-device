@@ -83,7 +83,7 @@ fs.truncate('data/raw/steps.csv', 0, function(){ console.log('Cleared') })
 fs.truncate('data/raw/temperature.csv', 0, function(){ console.log('Cleared') })
 
 // Copy raw data to analyze every 30 minutes
-var intervalTime = 1000 * 60 * 5;
+var intervalTime = 1000 * 60 * 1;
 setInterval(function() { 
   // Copy all files
   fs.createReadStream('data/raw/accelerometer.csv').pipe(fs.createWriteStream('data/analyze/accelerometer.csv')); 
