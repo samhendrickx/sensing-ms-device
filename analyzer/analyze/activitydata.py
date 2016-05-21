@@ -7,7 +7,7 @@ from accelerometerdata import AccelerometerData
 class ActivityData(Data):
 
     name = "activity"
-    minutes = 5
+    minutes = 1
 
     def getAnalyzed(self):
         data = self.extractData()
