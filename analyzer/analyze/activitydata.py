@@ -8,11 +8,16 @@ class ActivityData(Data):
 
     def getAnalyzed(self):
         data = self.extractData()
-        for sensor, values in data:
-            plt.plot(values)
-            plt.title(sensor)
+        for sensor, values in data.items():
+            if sensor == "accelerometer":
+                print sensor
+                print values
+                plt.plot(values)
+                plt.title(sensor)
         plt.show()
 
     def extractData(self):
-        data = [el[0] for sensor in ["accelerometer", "steps"] for el in self.data[sensor]]
+        data = dict()
+        data["accelerometer"] = [el[0] for el in self.data["accelerometer"]]
+        data["steps"] = [el[0] for el in self.data["steps"]]
         return data
