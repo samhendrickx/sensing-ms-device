@@ -3,6 +3,9 @@ from dateutil import parser
 from classification.classifier import Classifier
 import json
 import datetime
+from time import sleep
+from sys import stdout
+import urllib2
 
 
 def getData(url):
@@ -35,32 +38,95 @@ def groupData(mobileData, sensorData):
     return groups
 
 
-def extractFeatures(groups):
+def extractFeatures(groups, featureNames):
     features = list()
     labels = list()
-    featuresNames = ["heartrate", "temperature", "steps", "activity"]
     for group in groups:
         labels.append(group[0])
         featuresList = list()
         for key, value in group[1].iteritems():
             if key in featuresNames:
+                if value is None:
+                    value = 0
                 if isinstance(value, dict):
-                    for value2 in value.values():
+                    for key2, value2 in value.iteritems():
                         featuresList.append(value2)
                 else:
                     featuresList.append(value)
         features.append(featuresList)
     return features, labels
 
+
+def getLatestSensorData(url):
+    data = getData(url)
+    latestDate = None
+    latestEntry = None
+    for entry in data:
+        date = entry["datetime"]
+        date = parser.parse(date)
+        if latestDate is None:
+            latestDate = date
+            latestEntry = entry
+        else:
+            if date > latestDate:
+                latestDate = date
+                latestEntry = entry
+    return latestEntry
+
+
+def postPrediction(prediction):
+    req = urllib2.Request(
+        'http://sensing-ms-api.mybluemix.net/api/Patients/0/VasScores?'
+        'access_token=QCOI7AjXi7Is90f9hK0BQsOQuKxoU2ISnBa9HLt6Bmsg0nvQbOqPAbELCzTsl2ww'
+    )
+    req.add_header('Content-Type', 'application/json')
+
+    response = urllib2.urlopen(req, json.dumps(prediction))
+    html = response.read()
+    html = json.loads(html)
+    print "Success!\n"
+    print "Result:"
+    for key, value in html.iteritems():
+        if isinstance(value, dict):
+            print str(key) + ":"
+            for key2, value2 in value.iteritems():
+                print "     " + str(key2) + ": " + str(value2)
+        else:
+            print str(key) + ": " + str(value)
+
 if __name__ == "__main__":
     mobileUrl = "http://sensing-ms-api.mybluemix.net/api/Patients/0/" \
                 "mobileData?access_token=QCOI7AjXi7Is90f9hK0BQsOQuKxoU2ISnBa9HLt6Bmsg0nvQbOqPAbELCzTsl2ww"
     sensorUrl = "http://sensing-ms-api.mybluemix.net/api/Patients/0/" \
                 "sensorData?access_token=QCOI7AjXi7Is90f9hK0BQsOQuKxoU2ISnBa9HLt6Bmsg0nvQbOqPAbELCzTsl2ww"
+    featuresNames = ["heartrate", "temperature", "steps", "activity"]
+    allFeaturesNames = [
+        "heartrate_std", "heartrate_max", "heartrate_avg", "heartrate_min",
+        "temperature_std", "temperature_max", "temperature_avg", "temperature_min",
+        "steps", "activity_score", "activity_minutes"
+
+    ]
     mobileData = getData(mobileUrl)
     sensorData = getData(sensorUrl)
     groups = groupData(mobileData, sensorData)
-    features, labels = extractFeatures(groups)
+    features, labels = extractFeatures(groups, featuresNames)
     clf = Classifier()
     clf.train(features, labels)
-    pass
+    clf.getDangerousRules(allFeaturesNames)
+    maxSeconds = 1
+    seconds = maxSeconds
+    while False:
+        if seconds > 0:
+            print "\nWaiting for "+str(seconds)+" seconds."
+            sleep(1)
+            seconds -= 1
+        else:
+            print "\nStarting again..."
+            latestSensorData = getLatestSensorData(sensorUrl)
+            features, _ = extractFeatures([("?", latestSensorData)], featuresNames)
+            features = features[0]
+            score = clf.predict(features)
+            score = score[0]
+            prediction = {"score": score, "datetime": latestSensorData["datetime"]}
+            postPrediction(prediction)
+            seconds = maxSeconds
