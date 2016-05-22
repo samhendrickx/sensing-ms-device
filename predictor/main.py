@@ -112,10 +112,12 @@ if __name__ == "__main__":
     features, labels = extractFeatures(groups, featuresNames)
     clf = Classifier()
     clf.train(features, labels)
-    clf.getDangerousRules(allFeaturesNames)
+    rules = clf.getDangerousRules(allFeaturesNames)
+    print rules
     maxSeconds = 1
     seconds = maxSeconds
-    while False:
+    previousSensorData = None
+    while True:
         if seconds > 0:
             print "\nWaiting for "+str(seconds)+" seconds."
             sleep(1)
@@ -123,10 +125,14 @@ if __name__ == "__main__":
         else:
             print "\nStarting again..."
             latestSensorData = getLatestSensorData(sensorUrl)
-            features, _ = extractFeatures([("?", latestSensorData)], featuresNames)
-            features = features[0]
-            score = clf.predict(features)
-            score = score[0]
-            prediction = {"score": score, "datetime": latestSensorData["datetime"]}
-            postPrediction(prediction)
-            seconds = maxSeconds
+            if previousSensorData is None or latestSensorData["datetime"] != previousSensorData["datetime"]:
+                previousSensorData = latestSensorData
+                features, _ = extractFeatures([("?", latestSensorData)], featuresNames)
+                features = features[0]
+                score = clf.predict(features)
+                score = score[0]
+                prediction = {"score": score, "datetime": latestSensorData["datetime"]}
+                postPrediction(prediction)
+                seconds = maxSeconds
+            else:
+                print "No new data..."

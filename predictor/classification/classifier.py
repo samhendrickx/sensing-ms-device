@@ -63,10 +63,22 @@ class Classifier(object):
             rule = list()
             for direction in path:
                 if direction == "left":
-                    rule.append(str(features[node])+" <= "+str(threshold[node]))
+                    rule.append(
+                        {
+                            "feature": str(features[node]),
+                            "sign": "<=",
+                            "value": str(threshold[node])
+                        }
+                    )
                     node = left[node]
                 elif direction == "right":
-                    rule.append(str(features[node]) + " > " + str(threshold[node]))
+                    rule.append(
+                        {
+                            "feature": str(features[node]),
+                            "sign": ">",
+                            "value": str(threshold[node])
+                        }
+                    )
                     node = right[node]
             rules.append(rule)
         return rules
